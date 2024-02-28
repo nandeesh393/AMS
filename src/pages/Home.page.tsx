@@ -1,11 +1,10 @@
-import { Welcome } from '../components/Welcome/Welcome';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
+
+import { Dashboard} from '@/pages/Admin/admin';
 
 export function HomePage() {
   return (
     <>
-      <Welcome />
-      <ColorSchemeToggle />
+      <Dashboard />
     </>
   );
 }

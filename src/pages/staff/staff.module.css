@@ -1,0 +1,58 @@
+
+
+.navbar {
+   
+    display: flex;
+    flex-direction: column; 
+    
+    width: 100%;
+    
+  }
+  
+  .save{
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    inset -10px -5px 10px rgba(29, 29, 29, 0.5);
+}
+  
+  
+  .link {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--mantine-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    color: white;
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    -5px 10px rgba(29, 29, 29, 0.5);
+  
+    
+    
+    &:hover {
+      background: #000000;
+      box-shadow:  inset 5px 5px 10px rgba(0, 0, 0, 0.8), 
+                  inset -5px 10px rgba(29, 29, 29, 0.5);
+    }
+  
+    &[data-active] {
+      &,
+      &:hover {
+        background: #f9f9f9;
+        color: #000000;
+      box-shadow:   5px 5px 10px rgba(0, 0, 0, 0.8), 
+                 -5px -5px 10px rgba(29, 29, 29, 0.5);
+                 transition: box-shadow 0.3s ease;
+      }
+    }
+  }
+
+  .path a{
+    text-decoration: none;
+    color: white;
+}
+
+.record{
+  box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+               -5px -5px 10px rgba(29, 29, 29, 0.5);
+}

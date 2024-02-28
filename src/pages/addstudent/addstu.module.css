@@ -1,0 +1,30 @@
+.path a{
+    text-decoration: none;
+    color: rgb(195, 195, 195);
+}
+
+.save{
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    inset -10px -5px 10px rgba(29, 29, 29, 0.5);
+}
+
+input{
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    inset -10px -5px 10px rgba(29, 29, 29, 0.5);
+}
+
+Select{
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    inset -10px -5px 10px rgba(29, 29, 29, 0.5);
+}
+Table{
+    box-shadow:  5px 5px 10px rgba(0, 0, 0, 0.8), 
+    inset -10px -5px 10px rgba(29, 29, 29, 0.5);
+    background:  #292929;
+    margin-top: 30px;
+    color: rgb(255, 255, 255);
+}
+Table Table.Thead{
+    background: #c28888;
+}
+

@@ -1,0 +1,32 @@
+.box{
+    background: #292929;
+    padding: 30px;
+    margin-top: 30px;
+    color: white;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8), 
+    -10px -5px 10px rgba(29, 29, 29, 0.5);
+}
+
+.in{
+    background: #000000;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8), 
+                -5px -5px 10px rgba(29, 29, 29, 0.5);
+    color: white;
+}
+
+.card{
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8), 
+                -5px -5px 10px rgba(29, 29, 29, 0.5);
+    text-decoration: none;
+}
+
+.card h3{
+    text-decoration: none;
+   
+}
+
+.path a{
+    text-decoration: none;
+    color: white;
+}
