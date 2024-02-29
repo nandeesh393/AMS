@@ -98,17 +98,19 @@ export function Staff() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
-  const [sub, setSub] = useState('');
-  const [sem, setSem] = useState('');
-  const [sec, setSec] = useState('');
-  const [batch, setBatch] = useState('');
-  const [branch, setBranch] = useState('');
-  const [subject, setSubject] = useState('');
-  const [date, setDate] = useState('');
+  const [selectedSub, setSelectedSub] = useState('');
+  const [selectedSem, setSelectedSem] = useState('');
+  const [selectedSec, setSelectedSec] = useState('');
+  const [selectedBatch, setSelectedBatch] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
 
   const [branches, setBranches] = useState([]);
   const [batches, setBatches] = useState([]);
   const [subjects, setSubjects] = useState([]);
+
+  const [staffData, setStaffData] = useState([]);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState('');
@@ -218,6 +220,36 @@ export function Staff() {
     }
   };
 
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // Construct the API URL with selected filter options
+  //       const apiUrl = http://localhost:8000/iam_app/varun/ia/?stu_sem=${selectedSem}&branch=${selectedBranch}&batch=${selectedBatch}&sec=${selectedSec};
+  //       const response = await fetch(apiUrl);
+  //       const data = await response.json();
+  //       setStaffData(data);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [selectedBatch, selectedSem, selectedBranch, selectedSec]); // Update data when filter options change
+
+  const rows = staffData.map((element) => (
+    <Table.Tr key={element.sem}>
+      <Table.Td>{element.sec}</Table.Td>
+      <Table.Td>{element. batch}</Table.Td>
+      <Table.Td>{element.branch}</Table.Td>
+      <Table.Td>{element.sub}</Table.Td>
+      <Table.Td>{element.date}</Table.Td>
+      
+    </Table.Tr>
+  ));
+
+
+
   return (
     <AppShell
       header={{ height: 80 }}
@@ -276,11 +308,11 @@ export function Staff() {
           <Grid.Col span={4}>
             <NativeSelect
               label="Batch"
-              value={batch}
+              value={selectedBatch}
               onChange={(event) => {
                 const selectedValue = event.target.value;
                 console.log('Selected batch Id:', selectedValue);
-                setBatch(selectedValue ? parseInt(selectedValue, 10) : null);
+                setSelectedBatch(selectedValue ? parseInt(selectedValue, 10) : null);
               }}
               data={[
                 { label: 'Select the batch', value: null }, // Initial option
@@ -303,11 +335,11 @@ export function Staff() {
           <Grid.Col span={4}>
             <NativeSelect
               label="Branch"
-              value={branch}
+              value={selectedBranch}
               onChange={(event) => {
                 const selectedValue = event.target.value;
                 console.log('Selected branch Id:', selectedValue);
-                setBranch(selectedValue ? parseInt(selectedValue, 10) : null);
+                setSelectedBranch(selectedValue ? parseInt(selectedValue, 10) : null);
               }}
               data={[
                 { label: 'Select the Branch', value: null }, // Initial option
@@ -331,11 +363,11 @@ export function Staff() {
           <Grid.Col span={4}>
             <NativeSelect
               label="Semester"
-              value={sem}
+              value={selectedSem}
               onChange={(event) => {
                 const selectedValue = event.target.value;
                 console.log('Selected Organization Type:', selectedValue);
-                setSem(selectedValue);
+                setSelectedSem(selectedValue);
               }}
               data={[
                 { label: 'Select Type', value: '' },
@@ -364,11 +396,11 @@ export function Staff() {
           <Grid.Col span={4}>
             <NativeSelect
               label="Section"
-              value={sec}
+              value={selectedSec}
               onChange={(event) => {
                 const selectedValue = event.target.value;
                 console.log('Selected Organization Type:', selectedValue);
-                setSec(selectedValue);
+                setSelectedSec(selectedValue);
               }}
               data={[
                 { label: 'Select Type', value: '' },
@@ -392,11 +424,11 @@ export function Staff() {
           <Grid.Col span={4}>
             <NativeSelect
               label="Subjects"
-              value={subject}
+              value={selectedSub}
               onChange={(event) => {
                 const selectedValue = event.target.value;
                 console.log('Selected subject Id:', selectedValue);
-                setSubject(selectedValue ? parseInt(selectedValue, 10) : null);
+                setSelectedSub(selectedValue ? parseInt(selectedValue, 10) : null);
               }}
               data={[
                 { label: 'Select the subject', value: null }, // Initial option
@@ -422,7 +454,7 @@ export function Staff() {
               label="Date input"
               placeholder="Date input"
               type="date"
-              value={date} // Format dob as YYYY-MM-DD string
+              value={selectedDate} // Format dob as YYYY-MM-DD string
               onChange={(event) => setDate(event.target.value)}
               styles={{
                 label: {
