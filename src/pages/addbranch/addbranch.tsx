@@ -24,6 +24,7 @@ export function Addbranch() {
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const [branch_name, setBranch_name] = useState('');
+  const [branch_code, setBranch_code] = useState('');
 
   
   const [branchData, setBranchData] = useState([]);
@@ -36,7 +37,7 @@ export function Addbranch() {
     try {
       const branchData = {
         branch_name: branch_name,
-            
+        branch_code: branch_code,            
       };
   
       console.log('Data being sent:', branchData);
@@ -93,8 +94,7 @@ export function Addbranch() {
   const rows = branchData.map((element) => (
     <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.branch_id}>
        <Table.Td>{element.branch_name}</Table.Td>
-      
-      
+       <Table.Td>{element.branch_code}</Table.Td>      
       
     </Table.Tr>
   ));
@@ -150,15 +150,33 @@ export function Addbranch() {
       
 />
       </Grid.Col>
+      <Grid.Col span={4}>
+      <TextInput label="Branch" placeholder="enter branch" value={branch_code}
+      onChange={(event) => setBranch_code(event.target.value)} styles={{
+        label: {
+          color: 'white',
+        },
+        input: {
+          backgroundColor: '#292929',
+          border: 'none',
+          color: 'white',
+          height: '40px'
+         },
+         
+      }}  
+      
+/>
+      </Grid.Col>
     </Grid>
     <Button variant="filled" color="#292929" ml={20} mt={10} className={classes.save} onClick={handleAddBranch}>Registration</Button>
     <Table highlightOnHoverColor='#00000' withTableBorder >
       <Table.Thead style={{ color: 'white' }}>
         <Table.Tr>
           <Table.Th>Branch</Table.Th>
+          <Table.Th>Branch Code</Table.Th>
         </Table.Tr>
       </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
+      <Table.Td>{rows}</Table.Td>
     </Table>
 
     <Modal

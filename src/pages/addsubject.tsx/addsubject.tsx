@@ -34,6 +34,9 @@ export function Addsubject() {
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const [subject_name, setSubject_name] = useState('');
+  const [subject_code, setSubject_code] = useState('');
+  const [subject_credit, setSubject_credit] = useState('');
+
 
   const [branch, setBranch] = useState('');
   const [subData, setSubData] = useState([]);
@@ -60,7 +63,9 @@ export function Addsubject() {
     try {
       const subData = {
         sub_name: subject_name,
+        sub_code: subject_code,
         branch: branch,
+        subject_credit: subject_credit
       };
 
       console.log('Data being sent:', subData);
@@ -114,6 +119,7 @@ export function Addsubject() {
   const rows = subData.map((element) => (
     <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.sub_id}>
       <Table.Td>{element.sub_name}</Table.Td>
+      <Table.Td>{element.sub_code}</Table.Td>
       <Table.Td>{element.branch}</Table.Td>
     </Table.Tr>
   ));
@@ -166,6 +172,27 @@ export function Addsubject() {
               }}
             />
           </Grid.Col>
+
+          <Grid.Col span={4}>
+            <TextInput
+              label="Subject Code"
+              placeholder="Enter subject Code"
+              value={subject_code}
+              onChange={(event) => setSubject_code(event.target.value)}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
+
           <Grid.Col span={4}>
             <NativeSelect
               label="Branch"
@@ -193,6 +220,37 @@ export function Addsubject() {
               }}
             />
           </Grid.Col>
+
+          <Grid.Col span={4}>
+            <NativeSelect
+              label="Credits"
+              value={subject_credit}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                console.log('Selected Subject Credit:', selectedValue);
+                setSubject_credit(selectedValue);
+              }}
+              data={[
+                { label: 'Select Type', value: '' },
+                { label: '1', value: '1' },
+                { label: '2', value: '2' },
+                { label: '3', value: '3' },
+                { label: '4', value: '4' },
+              ]}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
+
         </Grid>
         <Button
           variant="filled"
@@ -208,6 +266,7 @@ export function Addsubject() {
           <Table.Thead style={{ color: 'white' }}>
             <Table.Tr>
               <Table.Th>Subject</Table.Th>
+              <Table.Th>Subject Code</Table.Th>
               <Table.Th>Branch</Table.Th>
             </Table.Tr>
           </Table.Thead>

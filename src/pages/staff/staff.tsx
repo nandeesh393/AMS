@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AppShell,
   Tooltip,
@@ -14,6 +14,7 @@ import {
   Grid,
   Center,
   NativeSelect,
+  Modal,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Header } from '../header/header';
@@ -103,14 +104,13 @@ export function Staff() {
   const [selectedSec, setSelectedSec] = useState('');
   const [selectedBatch, setSelectedBatch] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
 
   const [branches, setBranches] = useState([]);
   const [batches, setBatches] = useState([]);
   const [subjects, setSubjects] = useState([]);
 
-  const [staffData, setStaffData] = useState([]);
+  const [attData, setAttData] = useState([]);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState('');
@@ -175,40 +175,118 @@ export function Staff() {
     fetchSubjects();
   }, []);
 
-  const handleRequest = async () => {
+  // Ref for storing the entered IA marks data
+  const enteredAttdRef = useRef({});
+
+  // State to hold entered IA marks along with sub_id and ia
+  const [enteredAttd, setEnteredAttd] = useState({});
+
+  // Function to handle input change
+  // const handleInputChange = (event, stdId, subId, date, batch, branch, sem, sec, rowIndex) => {
+  //   if (!subId || !date || !batch || !branch || !sem || !sec) {
+  //     alert('Please select both Batch, Branch, Sem, Sec, Subject and IA ');
+  //     return;
+  //   }
+
+  //   if (event && event.target && event.target.value !== undefined) {
+  //     const { value } = event.target;
+  //     console.log('POST Std ID:', stdId);
+  //     console.log('POST SUB ID:', subId);
+  //     console.log('Post Date:', date);
+  //     console.log('POST Attendance:', value);
+
+  //     // Update the entered IA marks data with the respective student ID, sub_id, and ia
+  //     setEnteredAttd((prevState) => ({
+  //       ...prevState,
+  //       [stdId]: {
+  //         ...prevState[stdId],
+  //         [subId]: {
+  //           ...prevState[stdId]?.[subId], // Preserve existing data if available
+  //           [date]: value,
+  //         },
+  //       },
+  //     }));
+  //   } else {
+  //     console.error('Event or event.target.value is undefined');
+  //   }
+  // };
+
+  // const handleAddAttd = async () => {
+  //   try {
+  //     const attData = {
+  //       sem: selectedSec,
+  //       sec: selectedSec,
+  //       batch: selectedBatch,
+  //       subject: selectedSub,
+  //       branch: selectedBranch,
+  //       date: selectedDate
+  //     };
+
+  //     console.log('Data being sent:', attData);
+
+  //     const response = await fetch('http://127.0.0.1:8000/api/attendance/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(attData),
+  //     });
+
+  //     if (response.ok) {
+  //       setRedirectUrl('/staff');
+  //       setShowSuccess(true);
+  //       console.log('Student added successfully');
+  //     } else {
+  //       console.error('Failed to add Student:', response.status, response.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+
+  //     if (error instanceof Error) {
+  //       console.error('Error message:', error.message);
+  //     }
+  //   }
+  // };
+
+  // Function to handle adding Attendance
+  const handleAddAttd = async () => {
     try {
-      const distData = {
-        sem: sem,
-        sec: sec,
-        batch: batch,
-        subject: sub,
-        branch: branch,
-        date: date.toString(),
-      };
+      // Convert enteredIaMarks state into the format expected by the server
+      const formattedData = attData.map((element, index) => ({
+        std_id: element.std_id,
+        subject: selectedSub,
+        batch: selectedBatch,
+        branch: selectedBranch,
+        sem: selectedSem,
+        sec: selectedSec,
+        date: selectedDate,
+        attendance: attdArray[index] === 'P' ? 'Present' : 'Absent',
+      }));
 
-      console.log('Data being sent:', distData);
+      console.log('Data being sent:', formattedData);
 
-      const response = await fetch('http://127.0.0.1:8000/api/attendance/ ', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(distData),
-      });
+      // Send formattedData to the Django API endpoint
+      for (const attData of formattedData) {
+        const response = await fetch('http://127.0.0.1:8000/api/attendance/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(attData),
+        });
 
-      if (response.ok) {
-        setRedirectUrl('/staff');
-        setShowSuccess(true);
-        console.log('Student added successfully');
-      } else {
-        console.error('Failed to add Student:', response.status, response.statusText);
+        if (response.ok) {
+          setRedirectUrl('/staff');
+          setShowSuccess(true);
+          // Handle success
+          console.log('Attendance added successfully:', attData);
+        } else {
+          // Handle error
+          console.error('Failed to add Attendance:', response.status, response.statusText);
+        }
       }
     } catch (error) {
       console.error('Error:', error);
-
-      if (error instanceof Error) {
-        console.error('Error message:', error.message);
-      }
     }
   };
 
@@ -220,35 +298,49 @@ export function Staff() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Construct the API URL with selected filter options
+        const apiUrl = `http://127.0.0.1:8000/api/filter/student/?sem=${selectedSem}&branch=${selectedBranch}&batch=${selectedBatch}&sec=${selectedSec}`;
+        const response = await fetch(apiUrl);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // Construct the API URL with selected filter options
-  //       const apiUrl = http://localhost:8000/iam_app/varun/ia/?stu_sem=${selectedSem}&branch=${selectedBranch}&batch=${selectedBatch}&sec=${selectedSec};
-  //       const response = await fetch(apiUrl);
-  //       const data = await response.json();
-  //       setStaffData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
+        const data = await response.json();
+        setAttData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //   fetchData();
-  // }, [selectedBatch, selectedSem, selectedBranch, selectedSec]); // Update data when filter options change
+    fetchData();
+  }, [selectedBatch, selectedSem, selectedBranch, selectedSec]); // Update data when filter options change
 
-  const rows = staffData.map((element) => (
-    <Table.Tr key={element.sem}>
-      <Table.Td>{element.sec}</Table.Td>
-      <Table.Td>{element. batch}</Table.Td>
+  const handleAttendanceSelection = (index: number, attendance: string) => {
+    const newAttdArray = [...attdArray];
+    newAttdArray[index] = attendance;
+    setAttdArray(newAttdArray);
+  };
+
+  const [attdArray, setAttdArray] = useState(Array(attData.length).fill(''));
+
+  const rows = attData.map((element, index) => (
+    <Table.Tr key={element.std_id}>
+      <Table.Td>{element.std_name}</Table.Td>
+      <Table.Td>{element.std_usn}</Table.Td>
       <Table.Td>{element.branch}</Table.Td>
-      <Table.Td>{element.sub}</Table.Td>
-      <Table.Td>{element.date}</Table.Td>
-      
+      <Table.Td>{element.sem}</Table.Td>
+      <Table.Td>{element.sec}</Table.Td>
+      <Table.Td>
+        <Button
+          size="sm"
+          onClick={() => handleAttendanceSelection(index, 'P')}
+          color={attdArray[index] === 'P' ? 'primary' : 'green'}
+        >
+          P
+        </Button>
+      </Table.Td>
     </Table.Tr>
   ));
-
-
 
   return (
     <AppShell
@@ -423,7 +515,7 @@ export function Staff() {
           </Grid.Col>
           <Grid.Col span={4}>
             <NativeSelect
-              label="Subjects"
+              label="Subject"
               value={selectedSub}
               onChange={(event) => {
                 const selectedValue = event.target.value;
@@ -450,12 +542,11 @@ export function Staff() {
           </Grid.Col>
           <Grid.Col span={4}>
             <TextInput
-              clearable
               label="Date input"
               placeholder="Date input"
               type="date"
               value={selectedDate} // Format dob as YYYY-MM-DD string
-              onChange={(event) => setDate(event.target.value)}
+              onChange={(event) => setSelectedDate(event.target.value)}
               styles={{
                 label: {
                   color: 'white',
@@ -470,21 +561,34 @@ export function Staff() {
             />
           </Grid.Col>
         </Grid>
-        <Button variant="filled" color="#292929" ml={20} mt={10} className={classes.save}>
-          SEARCH
+        <Button
+          variant="filled"
+          color="#292929"
+          ml={20}
+          mt={10}
+          className={classes.save}
+          onClick={handleAddAttd}
+        >
+          ADD
         </Button>
+
         <Table highlightOnHoverColor="#00000" withTableBorder>
           <Table.Thead style={{ color: 'white' }}>
             <Table.Tr>
-              <Table.Th>Semester</Table.Th>
-              <Table.Th>Batch</Table.Th>
+              <Table.Th>Student Name</Table.Th>
+              <Table.Th>USN</Table.Th>
               <Table.Th>Branch</Table.Th>
-              <Table.Th>Subject</Table.Th>
-              <Table.Th>Action</Table.Th>
+              <Table.Th>Sem</Table.Th>
+              <Table.Th>Sec</Table.Th>
+              <Table.Th>Attendance</Table.Th>
             </Table.Tr>
           </Table.Thead>
-          {/* <Table.Tbody>{rows}</Table.Tbody> */}
+          <Table.Tbody>{rows}</Table.Tbody>
         </Table>
+
+        <Modal title="Success" opened={showSuccess} onClose={handleModalClose} withCloseButton>
+          Data added successfully!
+        </Modal>
       </AppShell.Main>
     </AppShell>
   );
