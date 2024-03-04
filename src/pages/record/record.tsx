@@ -75,7 +75,6 @@ export function Record() {
   const [selectedSub, setSelectedSub] = useState('');
   const [selectedBatch, setSelectedBatch] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('');
-
   const [selectedSem, setSelectedSem] = useState('');
   const [selectedSec, setSelectedSec] = useState('');
 
@@ -126,7 +125,7 @@ export function Record() {
         const data = await response.json();
         setSubjects(data);
       } catch (error) {
-        console.error('Error fetching States:', error);
+        console.error('Error fetching Subjects:', error);
       }
     };
 
@@ -141,7 +140,7 @@ export function Record() {
         const data = await response.json();
         setStudents(data);
       } catch (error) {
-        console.error('Error fetching States:', error);
+        console.error('Error fetching Students:', error);
       }
     };
 
@@ -190,17 +189,16 @@ export function Record() {
     // Find the branch name corresponding to the branch ID
     const branchName =
       branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
-  
+
     // // Find the subject name corresponding to the subject ID
     // const subName = subjects.find((subject) => subject.sub_id === element.sub_id)?.sub_name || '';
-  
-    // Find the student object corresponding to the student ID
-  const student = students.find((student) => student.std_id === element.std_id);
-  const studentName = student ? student.stu_name : ''; // Get the student name if found
-  
+
+    // Find the subject name corresponding to the student ID
+    const stuName = students.find((student) => student.std_id === element.std_id)?.std_name || '';
+
     return (
       <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.id}>
-        <Table.Td>{studentName}</Table.Td>
+        <Table.Td>{stuName}</Table.Td>
         <Table.Td>{branchName}</Table.Td> {/* Display branch name instead of ID */}
         <Table.Td>{element.sem}</Table.Td>
         <Table.Td>{element.sec}</Table.Td>
@@ -219,7 +217,6 @@ export function Record() {
       </Table.Tr>
     );
   });
-  
 
   return (
     <AppShell

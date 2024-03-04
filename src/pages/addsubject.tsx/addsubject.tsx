@@ -37,7 +37,6 @@ export function Addsubject() {
   const [subject_code, setSubject_code] = useState('');
   const [subject_credit, setSubject_credit] = useState('');
 
-
   const [branch, setBranch] = useState('');
   const [subData, setSubData] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -65,7 +64,7 @@ export function Addsubject() {
         sub_name: subject_name,
         sub_code: subject_code,
         branch: branch,
-        subject_credit: subject_credit
+        subject_credit: subject_credit,
       };
 
       console.log('Data being sent:', subData);
@@ -116,14 +115,22 @@ export function Addsubject() {
     fetchSubData();
   }, []);
 
-  const rows = subData.map((element) => (
-    <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.sub_id}>
-      <Table.Td>{element.sub_name}</Table.Td>
-      <Table.Td>{element.sub_code}</Table.Td>
-      <Table.Td>{element.branch}</Table.Td>
-    </Table.Tr>
-  ));
+  const rows = subData.map((element) => {
 
+    // Find the branch name corresponding to the branch ID
+    const branchName =
+      branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
+
+    return (
+      <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.sub_id}>
+        <Table.Td>{element.sub_name}</Table.Td>
+        <Table.Td>{element.sub_code}</Table.Td>
+        <Table.Td>{branchName}</Table.Td>
+      </Table.Tr>
+    );
+  });
+
+  
   return (
     <AppShell
       header={{ height: 80 }}
@@ -250,7 +257,6 @@ export function Addsubject() {
               }}
             />
           </Grid.Col>
-
         </Grid>
         <Button
           variant="filled"

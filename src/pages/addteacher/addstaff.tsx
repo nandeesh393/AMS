@@ -158,25 +158,25 @@ export function Addstaff() {
 
     fetchStaffData();
   }, []);
-  const rows = staffData.map((element) => (
-    <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.staff_id}>
-      <Table.Td>{element.staff_name}</Table.Td>
-      <Table.Td>{element.staff_code}</Table.Td>
-      <Table.Td>{element.branch}</Table.Td>
-      <Table.Td>{element.subject}</Table.Td>
-    </Table.Tr>
-  ));
 
-  // const rows = elements.map((element) => (
-  //   <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.rollNum}>
-  //     <Table.Td>{element.rollNum}</Table.Td>
-  //     <Table.Td>{element.name}</Table.Td>
-  //     <Table.Td>{element.usn}</Table.Td>
-  //     <Table.Td>{element.semester}</Table.Td>
-  //     <Table.Td>{element.branch}</Table.Td>
-  //     <Table.Td>{element.option}</Table.Td>
-  //   </Table.Tr>
-  // ));
+  const rows = staffData.map((element) => {
+    // Find the branch name corresponding to the branch ID
+    const branchName =
+      branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
+
+    // Find the branch name corresponding to the branch ID
+    const subName = subjects.find((subject) => subject.subject === element.sub_id)?.sub_name || '';
+
+    return (
+      <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.staff_id}>
+        <Table.Td>{element.staff_name}</Table.Td>
+        <Table.Td>{element.staff_code}</Table.Td>
+        <Table.Td>{branchName}</Table.Td> {/* Display branch name instead of ID */}
+        <Table.Td>{subName}</Table.Td>
+      </Table.Tr>
+    );
+  });
+
   return (
     <AppShell
       header={{ height: 80 }}
@@ -328,9 +328,8 @@ export function Addstaff() {
             <Table.Tr>
               <Table.Th>Staff Name</Table.Th>
               <Table.Th>Staff code</Table.Th>
-              <Table.Th>Subject</Table.Th>
-              {/* <Table.Th>Semester</Table.Th> */}
               <Table.Th>Branch</Table.Th>
+              <Table.Th>Subject</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>

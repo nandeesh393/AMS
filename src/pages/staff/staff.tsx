@@ -323,24 +323,30 @@ export function Staff() {
 
   const [attdArray, setAttdArray] = useState(Array(attData.length).fill(''));
 
-  const rows = attData.map((element, index) => (
-    <Table.Tr key={element.std_id}>
-      <Table.Td>{element.std_name}</Table.Td>
-      <Table.Td>{element.std_usn}</Table.Td>
-      <Table.Td>{element.branch}</Table.Td>
-      <Table.Td>{element.sem}</Table.Td>
-      <Table.Td>{element.sec}</Table.Td>
-      <Table.Td>
-        <Button
-          size="sm"
-          onClick={() => handleAttendanceSelection(index, 'P')}
-          color={attdArray[index] === 'P' ? 'primary' : 'green'}
-        >
-          P
-        </Button>
-      </Table.Td>
-    </Table.Tr>
-  ));
+  const rows = attData.map((element, index) => {
+    // Find the branch name corresponding to the branch ID
+    const branchName =
+      branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
+
+    return (
+      <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.std_id}>
+        <Table.Td>{element.std_name}</Table.Td>
+        <Table.Td>{element.std_usn}</Table.Td>
+        <Table.Td>{branchName}</Table.Td> {/* Display branch name instead of ID */}
+        <Table.Td>{element.sem}</Table.Td>
+        <Table.Td>{element.sec}</Table.Td>
+        <Table.Td>
+          <Button
+            size="sm"
+            onClick={() => handleAttendanceSelection(index, 'P')}
+            color={attdArray[index] === 'P' ? 'primary' : 'green'}
+          >
+            P
+          </Button>
+        </Table.Td>
+      </Table.Tr>
+    );
+  });
 
   return (
     <AppShell

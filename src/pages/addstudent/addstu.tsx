@@ -27,9 +27,7 @@ const items = [
     {item.title}
   </Anchor>
 ));
-const elements = [
-
-];
+const elements = [];
 
 export function Addstudent() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -136,8 +134,6 @@ export function Addstudent() {
     }
   };
 
-  
-
   useEffect(() => {
     const fetchStdData = async () => {
       try {
@@ -151,31 +147,31 @@ export function Addstudent() {
 
     fetchStdData();
   }, []);
-  const rows = stdData.map((element) => (
-    <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.std_id}>
-      <Table.Td>{element.roll_no}</Table.Td>
-      <Table.Td>{element.std_name}</Table.Td>
-      <Table.Td>{element.std_usn}</Table.Td>
-      <Table.Td>{element.sem}</Table.Td>
-      <Table.Td>{element.sec}</Table.Td>
-      <Table.Td>{element.batch}</Table.Td>
-      <Table.Td>{element.gender}</Table.Td>
-      <Table.Td>{element.branch}</Table.Td>
-      <Table.Td>{element.mobile}</Table.Td>
-      <Table.Td>{element.dob}</Table.Td>
-    </Table.Tr>
-  ));
 
-  // const rows = elements.map((element) => (
-  //   <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.rollNum}>
-  //     <Table.Td>{element.rollNum}</Table.Td>
-  //     <Table.Td>{element.name}</Table.Td>
-  //     <Table.Td>{element.usn}</Table.Td>
-  //     <Table.Td>{element.semester}</Table.Td>
-  //     <Table.Td>{element.branch}</Table.Td>
-  //     <Table.Td>{element.option}</Table.Td>
-  //   </Table.Tr>
-  // ));
+  const rows = stdData.map((element) => {
+    // Find the branch name corresponding to the branch ID
+    const branchName =
+      branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
+
+    // Find the branch name corresponding to the branch ID
+    const batchName = batches.find((batch) => batch.batch === element.batch_id)?.batch_name || '';
+
+    return (
+      <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.std_id}>
+        <Table.Td>{element.roll_no}</Table.Td>
+        <Table.Td>{element.std_name}</Table.Td>
+        <Table.Td>{element.std_usn}</Table.Td>
+        <Table.Td>{element.sem}</Table.Td>
+        <Table.Td>{element.sec}</Table.Td>
+        <Table.Td>{batchName}</Table.Td>
+        <Table.Td>{element.gender}</Table.Td>
+        <Table.Td>{branchName}</Table.Td> {/* Display branch name instead of ID */}
+        <Table.Td>{element.mobile}</Table.Td>
+        <Table.Td>{element.dob}</Table.Td>
+      </Table.Tr>
+    );
+  });
+
   return (
     <AppShell
       header={{ height: 80 }}
