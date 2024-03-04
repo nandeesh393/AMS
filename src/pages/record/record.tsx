@@ -52,8 +52,7 @@ const items = [
     {item.title}
   </Anchor>
 ));
-const element = [
-];
+const element = [];
 
 export function Record() {
   const location = useLocation();
@@ -74,10 +73,50 @@ export function Record() {
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const [selectedSub, setSelectedSub] = useState('');
+  const [selectedBatch, setSelectedBatch] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState('');
+
+  const [selectedSem, setSelectedSem] = useState('');
+  const [selectedSec, setSelectedSec] = useState('');
+
   const [subjects, setSubjects] = useState('');
+  const [students, setStudents] = useState('');
+
   const [selectedDate, setSelectedDate] = useState('');
   const [attdData, setAttdData] = useState([]);
 
+  const [branches, setBranches] = useState([]);
+  const [batches, setBatches] = useState([]);
+
+  useEffect(() => {
+    // Fetch the list of areas from the specified endpoint
+    const fetchBranches = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/branches/');
+        const data = await response.json();
+        setBranches(data);
+      } catch (error) {
+        console.error('Error fetching States:', error);
+      }
+    };
+
+    fetchBranches();
+  }, []);
+
+  useEffect(() => {
+    // Fetch the list of areas from the specified endpoint
+    const fetchBatches = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/batches/');
+        const data = await response.json();
+        setBatches(data);
+      } catch (error) {
+        console.error('Error fetching States:', error);
+      }
+    };
+
+    fetchBatches();
+  }, []);
 
   useEffect(() => {
     // Fetch the list of areas from the specified endpoint
@@ -95,10 +134,25 @@ export function Record() {
   }, []);
 
   useEffect(() => {
+    // Fetch the list of areas from the specified endpoint
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/students/');
+        const data = await response.json();
+        setStudents(data);
+      } catch (error) {
+        console.error('Error fetching States:', error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // Construct the API URL with selected filter options
-        const apiUrl = `http://127.0.0.1:8000/api/filter/attendance/?subject=${selectedSub}&date=${selectedDate}`;
+        const apiUrl = `http://127.0.0.1:8000/api/filter/attendance/?branch=${selectedBranch}&batch=${selectedBatch}&sem=${selectedSem}&sec=${selectedSec}&subject=${selectedSub}&date=${selectedDate}`;
         const response = await fetch(apiUrl);
 
         const data = await response.json();
@@ -109,30 +163,62 @@ export function Record() {
     };
 
     fetchData();
-  }, [selectedSub, selectedDate]); // Update data when filter options change
+  }, [selectedSub, selectedDate, selectedBatch, selectedSem, selectedBranch, selectedSec]); // Update data when filter options change
+
+  // const rows = attdData.map((row) => (
+  //   <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={row.id}>
+  //     <Table.Td>{row.std_id}</Table.Td>
+  //     <Table.Td>{row.branch}</Table.Td>
+  //     <Table.Td>{row.sem}</Table.Td>
+  //     <Table.Td>{row.sec}</Table.Td>
+  //     <Table.Td>
+  //       {/* Conditionally render button based on attendance */}
+  //       {row.attendance === 'Present' ? (
+  //         <Button variant="outline" color="blue" disabled>
+  //           P
+  //         </Button>
+  //       ) : (
+  //         <Button variant="outline" color="red" disabled>
+  //           A
+  //         </Button>
+  //       )}
+  //     </Table.Td>
+  //   </Table.Tr>
+  // ));
+
+  const rows = attdData.map((element) => {
+    // Find the branch name corresponding to the branch ID
+    const branchName =
+      branches.find((branch) => branch.branch === element.branch_id)?.branch_name || '';
   
-
-
-  const rows = attdData.map((row) => (
-    <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={row.id}>
-      <Table.Td>{row.std_id}</Table.Td>
-      <Table.Td>{row.branch}</Table.Td>
-      <Table.Td>{row.sem}</Table.Td>
-      <Table.Td>{row.sec}</Table.Td>
-      <Table.Td>
-        {/* Conditionally render button based on attendance */}
-        {row.attendance === 'Present' ? (
-          <Button variant="outline" color="blue" disabled>
-            P
-          </Button>
-        ) : (
-          <Button variant="outline" color="red" disabled>
-            A
-          </Button>
-        )}
-      </Table.Td>
-    </Table.Tr>
-  ));
+    // // Find the subject name corresponding to the subject ID
+    // const subName = subjects.find((subject) => subject.sub_id === element.sub_id)?.sub_name || '';
+  
+    // Find the student object corresponding to the student ID
+  const student = students.find((student) => student.std_id === element.std_id);
+  const studentName = student ? student.stu_name : ''; // Get the student name if found
+  
+    return (
+      <Table.Tr style={{ backgroundColor: '#474747', color: 'white' }} key={element.id}>
+        <Table.Td>{studentName}</Table.Td>
+        <Table.Td>{branchName}</Table.Td> {/* Display branch name instead of ID */}
+        <Table.Td>{element.sem}</Table.Td>
+        <Table.Td>{element.sec}</Table.Td>
+        <Table.Td>
+          {/* Conditionally render button based on attendance */}
+          {element.attendance === 'Present' ? (
+            <Button variant="outline" color="blue" disabled>
+              P
+            </Button>
+          ) : (
+            <Button variant="outline" color="red" disabled>
+              A
+            </Button>
+          )}
+        </Table.Td>
+      </Table.Tr>
+    );
+  });
   
 
   return (
@@ -177,6 +263,124 @@ export function Record() {
           {items}
         </Breadcrumbs>
         <Grid p={20}>
+          <Grid.Col span={4}>
+            <NativeSelect
+              label="Batch"
+              value={selectedBatch}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                console.log('Selected batch Id:', selectedValue);
+                setSelectedBatch(selectedValue ? parseInt(selectedValue, 10) : null);
+              }}
+              data={[
+                { label: 'Select the batch', value: null }, // Initial option
+                ...(batches &&
+                  batches.map((s) => ({ label: `${s.batch_name}`, value: `${s.batch_id}` }))),
+              ]}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
+
+          <Grid.Col span={4}>
+            <NativeSelect
+              label="Branch"
+              value={selectedBranch}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                console.log('Selected branch Id:', selectedValue);
+                setSelectedBranch(selectedValue ? parseInt(selectedValue, 10) : null);
+              }}
+              data={[
+                { label: 'Select the Branch', value: null }, // Initial option
+                ...(branches &&
+                  branches.map((s) => ({ label: `${s.branch_name}`, value: `${s.branch_id}` }))),
+              ]}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
+
+          <Grid.Col span={4}>
+            <NativeSelect
+              label="Semester"
+              value={selectedSem}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                console.log('Selected Organization Type:', selectedValue);
+                setSelectedSem(selectedValue);
+              }}
+              data={[
+                { label: 'Select Type', value: '' },
+                { label: '1', value: '1' },
+                { label: '2', value: '2' },
+                { label: '3', value: '3' },
+                { label: '4', value: '4' },
+                { label: '5', value: '5' },
+                { label: '6', value: '6' },
+                { label: '7', value: '7' },
+                { label: '8', value: '8' },
+              ]}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
+
+          <Grid.Col span={4}>
+            <NativeSelect
+              label="Section"
+              value={selectedSec}
+              onChange={(event) => {
+                const selectedValue = event.target.value;
+                console.log('Selected Organization Type:', selectedValue);
+                setSelectedSec(selectedValue);
+              }}
+              data={[
+                { label: 'Select Type', value: '' },
+                { label: 'A', value: 'A' },
+                { label: 'B', value: 'B' },
+                { label: 'C', value: 'C' },
+              ]}
+              styles={{
+                label: {
+                  color: 'white',
+                },
+                input: {
+                  backgroundColor: '#292929',
+                  border: 'none',
+                  color: 'white',
+                  height: '40px',
+                },
+              }}
+            />
+          </Grid.Col>
 
           <Grid.Col span={4}>
             <NativeSelect
@@ -226,7 +430,6 @@ export function Record() {
               }}
             />
           </Grid.Col>
-
         </Grid>
         <Table highlightOnHoverColor="#00000" withTableBorder>
           <Table.Thead style={{ color: 'white' }}>

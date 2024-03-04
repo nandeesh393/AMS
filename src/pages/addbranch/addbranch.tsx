@@ -151,7 +151,7 @@ export function Addbranch() {
 />
       </Grid.Col>
       <Grid.Col span={4}>
-      <TextInput label="Branch" placeholder="enter branch" value={branch_code}
+      <TextInput label="Branch code" placeholder="enter branch code" value={branch_code}
       onChange={(event) => setBranch_code(event.target.value)} styles={{
         label: {
           color: 'white',
@@ -173,7 +173,7 @@ export function Addbranch() {
       <Table.Thead style={{ color: 'white' }}>
         <Table.Tr>
           <Table.Th>Branch</Table.Th>
-          <Table.Th>Branch Code</Table.Th>
+          {/* <Table.Th>Branch Code</Table.Th> */}
         </Table.Tr>
       </Table.Thead>
       <Table.Td>{rows}</Table.Td>

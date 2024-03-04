@@ -28,12 +28,7 @@ const items = [
   </Anchor>
 ));
 const elements = [
-  // { rollNum: 1, name: 'Nandeesh', usn: '3VC21CS109', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button>},
-  // { rollNum: 2, name: 'Nandeesh', usn: '3VC21CS110', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button> },
-  // { rollNum: 3, name: 'Nandeesh', usn: '3VC21CS111', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button> },
-  // { rollNum: 4, name: 'Nandeesh', usn: '3VC21CS112', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button> },
-  // { rollNum: 5, name: 'Nandeesh', usn: '3VC21CS113', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button> },
-  // { rollNum: 6, name: 'Nandeesh', usn: '3VC21CS114', semester: 5, branch: 'CSE' ,option: <Button variant="filled" color="red">Delete</Button> },
+
 ];
 
 export function Addstudent() {

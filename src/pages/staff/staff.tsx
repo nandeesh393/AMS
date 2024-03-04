@@ -175,7 +175,7 @@ export function Staff() {
     fetchSubjects();
   }, []);
 
-  // Ref for storing the entered IA marks data
+  // Ref for storing the entered attendance data
   const enteredAttdRef = useRef({});
 
   // State to hold entered IA marks along with sub_id and ia
@@ -251,7 +251,7 @@ export function Staff() {
   // Function to handle adding Attendance
   const handleAddAttd = async () => {
     try {
-      // Convert enteredIaMarks state into the format expected by the server
+      // Convert attendance state into the format expected by the server
       const formattedData = attData.map((element, index) => ({
         std_id: element.std_id,
         subject: selectedSub,

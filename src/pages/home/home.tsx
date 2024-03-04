@@ -49,9 +49,9 @@ import { Link } from 'react-router-dom';
         <Tabs.Tab value="STAFF" className={classes.tab}>
           STAFF
         </Tabs.Tab>
-        <Tabs.Tab value="STUDENT" className={classes.tab}>
+        {/* <Tabs.Tab value="STUDENT" className={classes.tab}>
           STUDENT
-        </Tabs.Tab>
+        </Tabs.Tab> */}
       </Tabs.List>
 
       <Tabs.Panel value="ADMIN">
@@ -100,7 +100,7 @@ import { Link } from 'react-router-dom';
       </Card>
       </Tabs.Panel>
 
-      <Tabs.Panel value="STUDENT">
+      {/* <Tabs.Panel value="STUDENT">
       
       <Card className={classes.log}>
       
@@ -122,7 +122,7 @@ import { Link } from 'react-router-dom';
         </Link>
       </Card>
    
-      </Tabs.Panel>
+      </Tabs.Panel> */}
     </Tabs>
     </div>
         </AppShell.Main>
